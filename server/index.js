@@ -2,6 +2,8 @@ const express = require('express');
 const app = express();
 const port = process.env.PORT || 5001;
 const cors = require('cors');
+const dotenv = require('dotenv');
+dotenv.config();
 
 //middleware
 //connection to frontend side
@@ -12,7 +14,7 @@ app.use(express.json());
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 //const URI connects to mongodb to this file
 //change the username and password as per your need
-const uri = "mongodb+srv://mern-book-store:tirtharaj3@cluster39842.cpbmic9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster39842";
+const uri = process.env.MONGODB_URI;
 // const uri = "mongodb+srv://<username>:<password>@cluster39842.cpbmic9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster39842";
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -111,7 +113,7 @@ run().catch(console.dir);
 
 
 app.get('/', (req, res) => {
-    res.send('hello world');
+    res.send('Welcome to the book-store');
 });
 
 app.listen(port, () => {
