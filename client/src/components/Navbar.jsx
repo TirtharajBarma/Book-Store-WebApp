@@ -70,7 +70,7 @@ const Navbar = () => {
                 </div>   
             </div>
 
-            {/* navItems for sm devices */}
+            {/* navItems for small devices */}
             {/* space btw the nav => space-y-4 */}
             {/* padding Y */}
             {/* padding X */}
