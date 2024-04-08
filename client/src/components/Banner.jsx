@@ -27,7 +27,7 @@ const Banner = () => {
             </div> */}
 
             <div>
-                {/* referring to the banner.jsx */}
+                {/* referring to the bannerCard.jsx */}
                 <BannerCard></BannerCard>
             </div>
         </div>
