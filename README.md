@@ -7,8 +7,7 @@ This repository contains the code for the Book Store web application, which cons
 The client-side of the application is built using Vite, React, and Tailwind CSS. It provides the user interface for browsing and interacting with the book store.
 
 ### Technologies Used:
-- Vite
-- React
+- Vite - React
 - Tailwind CSS
 
 ## Server Side
