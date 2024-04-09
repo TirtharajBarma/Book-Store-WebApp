@@ -15,3 +15,9 @@ const BestSellerBooks = () => {
 }
 
 export default BestSellerBooks;
+
+// useSate -> React Hook
+// React Hook -> functional components to manage state and side effects without writing a class
+// state -> is used to manage data within a component. State variables hold information that may change over time and affect the rendering of the component. 
+// state variable named books
+// setBooks is the function you use to update books
