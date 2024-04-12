@@ -5,7 +5,7 @@ const OtherBooks = () => {
   const [books, setBooks] = useState([]);
 
   useEffect( () => {
-      fetch("http://localhost:5001/all-books").then(res => res.json()).then(data => setBooks(data.slice(1, 5)))
+      fetch("http://localhost:5001/all-books").then(res => res.json()).then(data => setBooks(data.slice(5, 10)))
   }, [])
 
   return (
