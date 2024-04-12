@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 // Import Swiper React components
 import { Swiper, SwiperSlide } from 'swiper/react';
-import {FaStar} from "react-icons/fa6";
+import {FaStar, FaStarHalf} from "react-icons/fa6";
 import { Avatar } from "flowbite-react";
 
 // Import Swiper styles
@@ -55,12 +55,34 @@ const Review = () => {
 
                 {/* text */}
                 <div className="mt-7">
-                    <p className='mb-5'>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+                    <p className='mb-5'>A treasure trove for book lovers! 📚😍</p>
 
-                        <Avatar img="https://images.pexels.com/photos/1365425/pexels-photo-1365425.jpeg?auto=compress&cs=tinysrgb&w=800" alt="avatar of Jese" rounded className='w-10 mb-4'
+                        <Avatar img="https://i.pinimg.com/474x/8e/da/b4/8edab4672131cee07ff6bd4725902227.jpg" alt="avatar of Jese" rounded className='w-10 mb-4'
                         />
-                        <h5 className='text-lg font-medium'>Mark Ping</h5>
-                        <p className='text-base'>CEO, ABC Company</p>
+                        <h5 className='text-lg font-medium'>Polly Baldwin</h5>
+                        <p className='text-base'>Paraguay</p>
+                </div>
+            </div>
+        </SwiperSlide>
+
+        <SwiperSlide className='shadow-2xl bg-white py-8 px-5 md:m-5 rounded-lg border'>
+            <div className='space-y-6'>
+                <div className='text-amber-500 flex gap-2'>
+                    <FaStar/>
+                    <FaStar/>
+                    <FaStar/>
+                    <FaStar/>
+                    <FaStarHalf/>
+                </div>
+
+                {/* text */}
+                <div className="mt-7">
+                    <p className='mb-5'>Great selection, fast delivery! 📚🚀</p>
+
+                        <Avatar img="https://i.pinimg.com/564x/2e/dd/02/2edd02160b51797f7adb807a79d96d36.jpg" alt="avatar of Jese" rounded className='w-10 mb-4'
+                        />
+                        <h5 className='text-lg font-medium'>Jay Sparks</h5>
+                        <p className='text-base'>Cayman Islands</p>
                 </div>
             </div>
         </SwiperSlide>
@@ -76,12 +98,12 @@ const Review = () => {
 
                 {/* text */}
                 <div className="mt-7">
-                    <p className='mb-5'>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+                    <p className='mb-5'>Love the cozy vibes! 📖❤️</p>
 
-                        <Avatar img="https://images.pexels.com/photos/1365425/pexels-photo-1365425.jpeg?auto=compress&cs=tinysrgb&w=800" alt="avatar of Jese" rounded className='w-10 mb-4'
+                        <Avatar img="https://i.pinimg.com/564x/01/c7/51/01c751482ef7c4f5e93f3539efd27f6f.jpg" alt="avatar of Jese" rounded className='w-10 mb-4'
                         />
-                        <h5 className='text-lg font-medium'>Mark Ping</h5>
-                        <p className='text-base'>CEO, ABC Company</p>
+                        <h5 className='text-lg font-medium'>Ethan Greene</h5>
+                        <p className='text-base'>Armenia</p>
                 </div>
             </div>
         </SwiperSlide>
@@ -93,16 +115,38 @@ const Review = () => {
                     <FaStar/>
                     <FaStar/>
                     <FaStar/>
+                    <FaStar/>
                 </div>
 
                 {/* text */}
                 <div className="mt-7">
-                    <p className='mb-5'>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+                    <p className='mb-5'>Best bookstore ever! Knowledgeable staff. 📖</p>
 
-                        <Avatar img="https://images.pexels.com/photos/1365425/pexels-photo-1365425.jpeg?auto=compress&cs=tinysrgb&w=800" alt="avatar of Jese" rounded className='w-10 mb-4'
+                        <Avatar img="https://i.pinimg.com/564x/33/b2/95/33b295a1a4a1af86ce9d54f15d7d69bb.jpg" alt="avatar of Jese" rounded className='w-10 mb-4'
                         />
-                        <h5 className='text-lg font-medium'>Mark Ping</h5>
-                        <p className='text-base'>CEO, ABC Company</p>
+                        <h5 className='text-lg font-medium'>Ernest Cannon</h5>
+                        <p className='text-base'>South Africa</p>
+                </div>
+            </div>
+        </SwiperSlide>
+
+        <SwiperSlide className='shadow-2xl bg-white py-8 px-5 md:m-5 rounded-lg border'>
+            <div className='space-y-6'>
+                <div className='text-amber-500 flex gap-2'>
+                    <FaStar/>
+                    <FaStar/>
+                    <FaStar/>
+                    <FaStarHalf/>
+                </div>
+
+                {/* text */}
+                <div className="mt-7">
+                    <p className='mb-5'>Awesome service, affordable prices! 📘💰.</p>
+
+                        <Avatar img="https://i.pinimg.com/564x/38/a8/1a/38a81a67ac5bd448fa9a4bc7a15ff58c.jpg" alt="avatar of Jese" rounded className='w-10 mb-4'
+                        />
+                        <h5 className='text-lg font-medium'>Dominic Ingram</h5>
+                        <p className='text-base'>French Guiana</p>
                 </div>
             </div>
         </SwiperSlide>
@@ -114,58 +158,17 @@ const Review = () => {
                     <FaStar/>
                     <FaStar/>
                     <FaStar/>
+                    <FaStarHalf/>
                 </div>
 
                 {/* text */}
                 <div className="mt-7">
-                    <p className='mb-5'>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+                    <p className='mb-5'>Incredible variety, my go-to for all book needs!</p>
 
-                        <Avatar img="https://images.pexels.com/photos/1365425/pexels-photo-1365425.jpeg?auto=compress&cs=tinysrgb&w=800" alt="avatar of Jese" rounded className='w-10 mb-4'
+                        <Avatar img="https://i.pinimg.com/474x/8e/74/91/8e7491bda80e37200caeae027112472a.jpg" alt="avatar of Jese" rounded className='w-10 mb-4'
                         />
-                        <h5 className='text-lg font-medium'>Mark Ping</h5>
-                        <p className='text-base'>CEO, ABC Company</p>
-                </div>
-            </div>
-        </SwiperSlide>
-
-        <SwiperSlide className='shadow-2xl bg-white py-8 px-5 md:m-5 rounded-lg border'>
-            <div className='space-y-6'>
-                <div className='text-amber-500 flex gap-2'>
-                    <FaStar/>
-                    <FaStar/>
-                    <FaStar/>
-                    <FaStar/>
-                </div>
-
-                {/* text */}
-                <div className="mt-7">
-                    <p className='mb-5'>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
-
-                        <Avatar img="https://images.pexels.com/photos/1365425/pexels-photo-1365425.jpeg?auto=compress&cs=tinysrgb&w=800" alt="avatar of Jese" rounded className='w-10 mb-4'
-                        />
-                        <h5 className='text-lg font-medium'>Mark Ping</h5>
-                        <p className='text-base'>CEO, ABC Company</p>
-                </div>
-            </div>
-        </SwiperSlide>
-
-        <SwiperSlide className='shadow-2xl bg-white py-8 px-5 md:m-5 rounded-lg border'>
-            <div className='space-y-6'>
-                <div className='text-amber-500 flex gap-2'>
-                    <FaStar/>
-                    <FaStar/>
-                    <FaStar/>
-                    <FaStar/>
-                </div>
-
-                {/* text */}
-                <div className="mt-7">
-                    <p className='mb-5'>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
-
-                        <Avatar img="https://images.pexels.com/photos/1365425/pexels-photo-1365425.jpeg?auto=compress&cs=tinysrgb&w=800" alt="avatar of Jese" rounded className='w-10 mb-4'
-                        />
-                        <h5 className='text-lg font-medium'>Mark Ping</h5>
-                        <p className='text-base'>CEO, ABC Company</p>
+                        <h5 className='text-lg font-medium'>Ann Daniel</h5>
+                        <p className='text-base'>Isle of Man</p>
                 </div>
             </div>
         </SwiperSlide>
