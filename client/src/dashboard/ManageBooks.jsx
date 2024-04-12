@@ -16,6 +16,8 @@ const ManageBooks = () => {
     }).then(res => res.json()).then(data => {
       alert("Book is deleted successfully!") 
       // setAllBooks(data);
+      window.location.reload();
+      // for reload
     })
   }
 
