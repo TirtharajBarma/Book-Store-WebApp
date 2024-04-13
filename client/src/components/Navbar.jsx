@@ -1,13 +1,18 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
 
 //react icons
 //FaBlog is the name of the icon
 import { FaBarsStaggered, FaBlog, FaXmark } from "react-icons/fa6";
+import { AuthContext } from '../context/AuthProvider';
 
 const Navbar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isSticky, setIsSticky] = useState(false);    {/* by default false */}
+
+    // to fetch the user from firebase
+    const {user} = useContext(AuthContext);
+    // console.log(user)
 
     //toggle menu
     const toggleMenu = () => {
@@ -35,7 +40,7 @@ const Navbar = () => {
         {link : "Home", path: "/"},
         {link : "About", path: "/about"},
         {link : "Shop", path: "/shop"},
-        {link : "Sell Your Book", path: "/admin/dashboard"},
+        {link : "Sell Your Book", path: "/admin/dashboard/upload"},
         {link : "Blog", path: "/blog"},
     ]
 
@@ -58,6 +63,10 @@ const Navbar = () => {
                 {/* btn for lg devices */}
                 <div className='space-x-12 hidden lg:flex items-center'>
                     <button><FaBarsStaggered className='w-5 hover:text-blue-700'/></button>
+                    {
+                        // to show user name
+                        user ? user.email : ""
+                    }
                 </div>
 
                 {/* menu btn for mobile devices */}
