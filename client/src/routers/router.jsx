@@ -57,7 +57,7 @@ import PrivateRoute from "../PrivateRoute/PrivateRoute";
         },
         {
           path: "/admin/dashboard/upload",
-          element: <UploadBook/>
+          element: <PrivateRoute><UploadBook/></PrivateRoute>
         },
         {
           path: "/admin/dashboard/manage",
@@ -77,7 +77,7 @@ import PrivateRoute from "../PrivateRoute/PrivateRoute";
     {
       path:"login",
       element: <Login/>
-    }
+    },
   ]);
 
   export default router;
