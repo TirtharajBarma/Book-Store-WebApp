@@ -1,12 +1,31 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Badge, Sidebar } from "flowbite-react";
 import { HiArrowSmRight, HiChartPie, HiInbox, HiOutlineCloudUpload, HiShoppingBag, HiTable, HiUser, HiViewBoards } from "react-icons/hi";
+import { AuthContext } from '../context/AuthProvider';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 
 const Side = () => {
+
+  const {user, logout} = useContext(AuthContext);
+
+    const location = useLocation();
+    const navigate = useNavigate();
+
+    const from = location.state?.from?.pathname || "/";
+
+    const handleLogOut = () => {
+        logout().then( () => {
+            alert('Sign-out successfully!!')
+            navigate(from, {replace: true})
+        }).catch((error) => {
+
+        });
+    }
+
   return (
     <Sidebar aria-label="Sidebar with call to action button example">
-    <Sidebar.Logo href="#" img="https://i.pinimg.com/474x/ff/7b/2c/ff7b2ca6b7b1356412e9d1f0322939b5.jpg" imgAlt="DASHBOARD"></Sidebar.Logo>
+    <Sidebar.Logo href="#" img={user?.photoURL} imgAlt="DASHBOARD"> <p>{user?.displayName || "Demo User"}</p> </Sidebar.Logo>
       <Sidebar.Items>
         <Sidebar.ItemGroup>
           <Sidebar.Item href="/admin/dashboard" icon={HiChartPie}>
@@ -24,10 +43,7 @@ const Side = () => {
           <Sidebar.Item href="#" icon={HiShoppingBag}>
             Products
           </Sidebar.Item>
-          <Sidebar.Item href="/login" icon={HiArrowSmRight}>
-            Sign In
-          </Sidebar.Item>
-          <Sidebar.Item href="/logout" icon={HiTable}>
+          <Sidebar.Item onClick={handleLogOut} icon={HiTable}>
             Log out
           </Sidebar.Item>
         </Sidebar.ItemGroup>
