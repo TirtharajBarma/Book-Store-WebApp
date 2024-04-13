@@ -78,7 +78,7 @@ const EditBooks = () => {
             <Label htmlFor="bookTitle" value="Book Title" />
           </div>
 
-          {/* default value fetch the bookTitle */}
+          {/* default value fetch the {bookTitle} */}
           <TextInput id="bookTitle" name = "bookTitle" type="text" placeholder="Book name" defaultValue={bookTitle} required />
         </div>
         
