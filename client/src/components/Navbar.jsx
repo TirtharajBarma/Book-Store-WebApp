@@ -61,7 +61,7 @@ const Navbar = () => {
                 </ul>
 
                 {/* btn for lg devices */}
-                <div className='space-x-12 hidden lg:flex items-center'>
+                <div className='space-x-12 hidden lg:flex items-center gap-5'>
                     <button><FaBarsStaggered className='w-5 hover:text-blue-700'/></button>
                     {
                         // to show user name
