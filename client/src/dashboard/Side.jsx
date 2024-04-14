@@ -25,7 +25,7 @@ const Side = () => {
 
   return (
     <Sidebar aria-label="Sidebar with call to action button example">
-    <Sidebar.Logo href="#" img={user?.photoURL} imgAlt="DASHBOARD"> <p>{user?.displayName || "Demo User"}</p> </Sidebar.Logo>
+    <Sidebar.Logo href="#" img={user?.photoURL} imgAlt=""> <p>{user?.displayName || "Demo User"}</p> </Sidebar.Logo>
       <Sidebar.Items>
         <Sidebar.ItemGroup>
           <Sidebar.Item href="/admin/dashboard" icon={HiChartPie}>
