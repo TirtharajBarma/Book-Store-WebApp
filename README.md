@@ -7,7 +7,8 @@ This repository contains the code for the Book Store web application, which cons
 The client-side of the application is built using Vite, React, and Tailwind CSS. It provides the user interface for browsing and interacting with the book store.
 
 ### Technologies Used:
-- Vite - React
+- Vite
+- React
 - Tailwind CSS
 
 ## Server Side
@@ -18,6 +19,13 @@ The server-side of the application is built using MongoDB, Express.js, and Node.
 - MongoDB
 - Express.js
 - Node.js
+
+## Authentication
+
+For user authentication, Google Firebase Authentication is utilized.
+
+### Technologies Used:
+- Google Firebase Authentication
 
 ## Installation
 
