@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import BookCards from '../components/BookCards';
+import KBackend from '../utils/constants';
 
 const BestSellerBooks = () => {
     const [books, setBooks] = useState([]);
 
     useEffect( () => {
-        fetch("http://localhost:5001/all-books").then(res => res.json()).then(data => setBooks(data.slice(0, 5)))
+        fetch(`${KBackend.url}/all-books`).then(res => res.json()).then(data => setBooks(data.slice(0, 5)))
     }, [])
   return (
     <div>

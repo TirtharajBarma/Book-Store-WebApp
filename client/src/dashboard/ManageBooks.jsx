@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import { Table } from "flowbite-react";
 import { Link } from 'react-router-dom';
+import KBackend from '../utils/constants';
 
 const ManageBooks = () => {
   const [allBooks, setAllBooks] = useState([]);
   useEffect( () => {
-    fetch("http://localhost:5001/all-books").then(res => res.json()).then(data => setAllBooks(data));
+    fetch(`${KBackend.url}/all-books`).then(res => res.json()).then(data => setAllBooks(data));
   }, [])
 
   // delete a book
   const handleDelete = (id) => {
     console.log (id);
-    fetch(`http://localhost:5001/book/${id}`, {
+    fetch(`${KBackend.url}/book/${id}`, {
       method: "DELETE",
     }).then(res => res.json()).then(data => {
       alert("Book is deleted successfully!") 

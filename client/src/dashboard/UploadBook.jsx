@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Button, Checkbox, Label, Select, TextInput , Textarea} from "flowbite-react"
+import KBackend from '../utils/constants';
 
 const UploadBook = () => {
 
@@ -45,7 +46,7 @@ const UploadBook = () => {
     console.log(bookObj);
 
     //send data to DataBase
-    fetch("http://localhost:5001/upload-book", {
+    fetch(`${KBackend.url}/upload-book`, {
       method: "POST",
       headers: {
         "Content-type" : "application/json",

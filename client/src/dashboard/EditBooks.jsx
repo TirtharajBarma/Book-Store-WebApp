@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useLoaderData, useParams } from 'react-router-dom'
 import { Button, Checkbox, Label, Select, TextInput , Textarea} from "flowbite-react"
+import KBackend from '../utils/constants';
 
 
 const EditBooks = () => {
@@ -50,7 +51,7 @@ const EditBooks = () => {
     // console.log(bookObj);
 
     //send data to DataBase
-    fetch(`http://localhost:5001/book/${id}`, {
+    fetch(`${KBackend.url}/book/${id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json"

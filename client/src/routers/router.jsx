@@ -16,6 +16,7 @@ import EditBooks from "../dashboard/EditBooks";
 import SignUp from "../components/SignUp";
 import Login from "../components/Login";
 import PrivateRoute from "../PrivateRoute/PrivateRoute";
+import KBackend from "../utils/constants";
 
   const router = createBrowserRouter([
     {
@@ -41,7 +42,7 @@ import PrivateRoute from "../PrivateRoute/PrivateRoute";
         {
           path: '/book/:id',
           element: <SingleBook/>,
-          loader: ({params}) => fetch(`http://localhost:5001/book/${params.id}`)
+          loader: ({params}) => fetch(`${KBackend.url}/book/${params.id}`)
         }
       ]
     },
@@ -66,7 +67,7 @@ import PrivateRoute from "../PrivateRoute/PrivateRoute";
         {
           path: "/admin/dashboard/edit-books/:id",
           element: <EditBooks/>,
-          loader: ({params}) => fetch(`http://localhost:5001/book/${params.id}`)
+          loader: ({params}) => fetch(`${KBackend.url}/book/${params.id}`)
         }
       ]
     },
