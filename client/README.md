@@ -1,6 +1,3 @@
-Here's the updated README with information about obtaining Firebase API keys and creating a Firebase project:
-
-```markdown
 # Book Store Client
 
 This is the client-side code for the Book Store web application. It is built using React with Vite and provides the frontend functionality for interacting with the backend and Firebase for authentication.
