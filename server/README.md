@@ -14,7 +14,15 @@ This will install all the necessary dependencies.
 
 ## Configuration
 
-Before running the server, make sure to replace the MongoDB URI in the code with your own username and password for your MongoDB database. You can find this URI in the `uri` variable inside the `run` function in the `server.js` file.
+Before running the server, create a `.env` file in the root of your project with the following content:
+
+```bash
+MONGODB_URI = "your-mongodb-uri"
+```
+
+Replace `"your-mongodb-uri"` with your actual MongoDB connection string, including the username, password, and cluster information. This will be used to connect to your MongoDB database.
+
+Ensure that the `.env` file includes the correct URI for your MongoDB cluster.
 
 ## Usage
 
@@ -77,4 +85,4 @@ Contributions are welcome! If you find any bugs or have suggestions for improvem
 This project is licensed under the MIT License - see the MIT License file for details.
 ```
 
-Feel free to adjust any details or add more sections as needed for your project.
+This addition informs users about the `.env` file for setting up the MongoDB URI properly. Let me know if you need any further adjustments!
