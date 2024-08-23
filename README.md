@@ -2,6 +2,10 @@
 
 This repository contains the code for the Book Store web application, which consists of both the client-side and server-side components.
 
+## Project Link
+
+You can view the live project [here](http://book-store-front-end.s3-website.ap-south-1.amazonaws.com/).
+
 ## Client Side
 
 The client-side of the application is built using Vite, React, and Tailwind CSS. It provides the user interface for browsing and interacting with the book store.
