@@ -42,7 +42,7 @@ For user authentication, Google Firebase Authentication is utilized.
 
 ## Usage
 
-Once both the client-side and server-side servers are running, you can access the Book Store web application in your web browser. The client-side server typically runs on port 3000, and the server-side server runs on the specified port (default is 5001).
+Once both the client-side and server-side servers are running, you can access the Book Store web application in your web browser. The client-side server typically runs on port 5173, and the server-side server runs on the specified port (default is 5001).
 
 ## Contributing
 
