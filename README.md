@@ -4,7 +4,7 @@ This repository contains the code for the Book Store web application, which cons
 
 ## Project Link
 
-You can view the live project [here](http://book-store-front-end.s3-website.ap-south-1.amazonaws.com/).
+You can view the live project [here](http://book-store-client.s3-website.ap-south-1.amazonaws.com/).
 
 ## Client Side
 
