@@ -6,7 +6,7 @@ const OtherBooks = () => {
   const [books, setBooks] = useState([]);
 
   useEffect( () => {
-      fetch(`${KBackend.url}/all-books`).then(res => res.json()).then(data => setBooks(data.slice(5, 10)))
+      fetch(`${KBackend.url}/all-books`).then(res => res.json()).then(data => setBooks(data.slice(5, 50)))
   }, [])
 
   return (
