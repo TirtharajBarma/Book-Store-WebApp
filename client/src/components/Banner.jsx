@@ -14,10 +14,10 @@ const Banner = () => {
                 
                 <p className='md:w-4/5'>Embark on a literary journey where every page holds a world of wonder. Our bookstore is a sanctuary for bibliophiles, a realm where stories dance off the shelves and imagination knows no bounds. Welcome to a haven where every book finds its perfect reader.</p>
                 
-                <div>
+                {/* <div>
                     <input type="search" name='search' id='search' placeholder='Search a book' className='py-2 px-2 rounded-sm outline-none'/>
                     <button className='bg-blue-700 px-6 py-2 text-white font-medium hover:bg-black transition-all ease-in duration-250'>Search</button>
-                </div>
+                </div> */}
                 
             </div>
 
