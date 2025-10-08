@@ -106,6 +106,50 @@ async function run() {
         res.send(result);
     });
 
+    // Rate a book
+    app.post("/book/:id/rate", async(req, res) => {
+        try {
+            const id = req.params.id;
+            const { rating } = req.body;
+            
+            if (!rating || rating < 1 || rating > 5) {
+                return res.status(400).send({ error: 'Rating must be between 1 and 5' });
+            }
+
+            const filter = { _id: new ObjectId(id) };
+            const book = await bookCollections.findOne(filter);
+            
+            if (!book) {
+                return res.status(404).send({ error: 'Book not found' });
+            }
+
+            // Calculate new average rating
+            const currentRating = book.rating || 0;
+            const currentTotal = book.totalRatings || 0;
+            const newTotal = currentTotal + 1;
+            const newAverage = ((currentRating * currentTotal) + rating) / newTotal;
+
+            const updatedDoc = {
+                $set: {
+                    rating: newAverage,
+                    totalRatings: newTotal,
+                    lastRated: new Date()
+                }
+            };
+
+            await bookCollections.updateOne(filter, updatedDoc);
+            
+            res.send({
+                success: true,
+                averageRating: newAverage,
+                totalRatings: newTotal
+            });
+        } catch (error) {
+            console.error('Rating error:', error);
+            res.status(500).send({ error: 'Failed to rate book' });
+        }
+    });
+
 
 
     // Send a ping to confirm a successful connection

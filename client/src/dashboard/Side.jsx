@@ -17,9 +17,12 @@ const Side = () => {
     const handleLogOut = () => {
         logout().then( () => {
             alert('Sign-out successfully!!')
-            navigate(from, {replace: true})
+            // Clear browser history and redirect to home
+            navigate('/', {replace: true})
+            // Clear any cached data
+            window.history.pushState(null, '', '/');
         }).catch((error) => {
-
+            console.error('Logout error:', error);
         });
     }
 
@@ -37,10 +40,10 @@ const Side = () => {
           <Sidebar.Item href="/admin/dashboard/manage" icon={HiInbox}>
             Manage Books
           </Sidebar.Item>
-          <Sidebar.Item href="#" icon={HiUser}>
+          <Sidebar.Item href="/admin/dashboard/users" icon={HiUser}>
             Users
           </Sidebar.Item>
-          <Sidebar.Item href="#" icon={HiShoppingBag}>
+          <Sidebar.Item href="/admin/dashboard/products" icon={HiShoppingBag}>
             Products
           </Sidebar.Item>
           <Sidebar.Item onClick={handleLogOut} icon={HiTable}>

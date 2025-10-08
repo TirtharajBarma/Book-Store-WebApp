@@ -8,11 +8,14 @@ import Shop from "../shop/Shop";
 import About from "../components/About";
 import Blog from "../components/Blog";
 import SingleBook from "../shop/SingleBook";
+import BookReader from "../components/BookReader";
 import DashboardLayout from "../dashboard/DashboardLayout";
 import Dashboard from "../dashboard/Dashboard";
 import UploadBook from "../dashboard/UploadBook";
 import ManageBooks from "../dashboard/ManageBooks";
 import EditBooks from "../dashboard/EditBooks";
+import Users from "../dashboard/Users";
+import Products from "../dashboard/Products";
 import SignUp from "../components/SignUp";
 import Login from "../components/Login";
 import PrivateRoute from "../PrivateRoute/PrivateRoute";
@@ -47,6 +50,13 @@ import KBackend from "../utils/constants";
       ]
     },
 
+    // Book Reader - Separate route (no navbar/footer)
+    {
+      path: '/book/:id/read',
+      element: <BookReader/>,
+      loader: ({params}) => fetch(`${KBackend.url}/book/${params.id}`)
+    },
+
     // private routing
     {
       path: "/admin/dashboard",
@@ -62,12 +72,20 @@ import KBackend from "../utils/constants";
         },
         {
           path: "/admin/dashboard/manage",
-          element: <ManageBooks/>
+          element: <PrivateRoute><ManageBooks/></PrivateRoute>
         },
         {
           path: "/admin/dashboard/edit-books/:id",
-          element: <EditBooks/>,
+          element: <PrivateRoute><EditBooks/></PrivateRoute>,
           loader: ({params}) => fetch(`${KBackend.url}/book/${params.id}`)
+        },
+        {
+          path: "/admin/dashboard/users",
+          element: <PrivateRoute><Users/></PrivateRoute>
+        },
+        {
+          path: "/admin/dashboard/products",
+          element: <PrivateRoute><Products/></PrivateRoute>
         }
       ]
     },

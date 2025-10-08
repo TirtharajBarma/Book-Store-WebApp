@@ -43,50 +43,86 @@ const Navbar = () => {
     ]
 
   return (
-    <header className='w-full bg-transparent fixed top-0 left-0 right-0 transition-all ease-in duration-300'>
-        {/* navbar shade */}
-        <nav className={`py-4 lg:px-24 px-4 ${isSticky ? "sticky top-0 left-0 right-0 bg-blue-300" : ""}`}>
-            <div className='flex justify-between items-center text-base gap-8'>
+    <header className='w-full bg-white shadow-md fixed top-0 left-0 right-0 transition-all ease-in duration-300 z-50 backdrop-blur-sm bg-opacity-95'>
+        <nav className={`py-3 lg:px-24 px-4 ${isSticky ? "shadow-lg" : ""}`}>
+            <div className='flex justify-between items-center gap-8'>
                 {/* logo */}
-                <Link to="/" className='text-2xl font-bold text-blue-700 flex items-centre gap-2'><FaBlog className='inline-block'/>Books</Link>
+                <Link to="/" className='text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent flex items-center gap-2 hover:scale-105 transition-transform'>
+                    <FaBlog className='text-blue-600'/>
+                    <span>Books</span>
+                </Link>
 
                 {/* nav items for large devices */}
-                {/* space btw the navItems */}
-                <ul className='md:flex space-x-12 hidden'>
+                <ul className='md:flex space-x-8 hidden'>
                     {
-                        navItems.map( ({link, path}) => <Link key = {path} to={path} className='block text-base text-black uppercase cursor-auto hover:text-blue-700' >{link}</Link>)
+                        navItems.map( ({link, path}) => 
+                            <Link 
+                                key={path} 
+                                to={path} 
+                                className='relative text-base font-medium text-gray-700 hover:text-blue-600 transition-colors duration-200 group'
+                            >
+                                {link}
+                                <span className='absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 group-hover:w-full transition-all duration-300'></span>
+                            </Link>
+                        )
                     }
                 </ul>
 
-                {/* btn for lg devices */}
-                <div className='space-x-12 hidden lg:flex items-center gap-5'>
-                    <button><FaBarsStaggered className='w-5 hover:text-blue-700'/></button>
-                    {
-                        // to show user name
-                        user ? user.email : ""
-                    }
+                {/* user info & search for lg devices */}
+                <div className='hidden lg:flex items-center gap-4'>
+                    {user && (
+                        <div className='flex items-center gap-2 px-4 py-2 bg-gray-100 rounded-full'>
+                            <div className='w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white font-bold'>
+                                {user.email[0].toUpperCase()}
+                            </div>
+                            <span className='text-sm font-medium text-gray-700 max-w-[150px] truncate'>
+                                {user.email.split('@')[0]}
+                            </span>
+                        </div>
+                    )}
                 </div>
 
                 {/* menu btn for mobile devices */}
-                 <div className='md:hidden'>
-                    <button onClick={toggleMenu} className='text-black focus:outline-none'>
-                        {
-                            isMenuOpen ? <FaXmark className='h-5 w-5 text-black'/> : <FaBarsStaggered className='h-5 w-5 text-black'/>
+                <div className='md:hidden'>
+                    <button 
+                        onClick={toggleMenu} 
+                        className='p-2 rounded-lg hover:bg-gray-100 transition-colors focus:outline-none'
+                        aria-label="Toggle menu"
+                    >
+                        {isMenuOpen ? 
+                            <FaXmark className='h-6 w-6 text-gray-700'/> : 
+                            <FaBarsStaggered className='h-6 w-6 text-gray-700'/>
                         }
                     </button>
                 </div>   
             </div>
 
             {/* navItems for small devices */}
-            {/* space btw the nav => space-y-4 */}
-            {/* padding Y */}
-            {/* padding X */}
-            {/* margin-top => mt */}
-            {/* if menuOpen when show else hide */}
-            <div className={`space-y-4 px-4 mt-16 py-7 bg-blue-700 ${isMenuOpen ? "block fixed top-0 right-0 left-0" : "hidden"}`}>
-                {
-                    navItems.map( ({link, path}) => <Link key={path} to={path} className='block text-base text-white uppercase cursor-pointer'>{link}</Link>)
-                }
+            <div className={`md:hidden fixed top-[60px] left-0 right-0 bg-white shadow-lg z-40 transition-all duration-300 ${isMenuOpen ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0 pointer-events-none"}`}>
+                <div className='px-4 py-6 space-y-4'>
+                    {navItems.map( ({link, path}) => 
+                        <Link 
+                            key={path} 
+                            to={path} 
+                            onClick={() => setIsMenuOpen(false)}
+                            className='block text-lg font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50 px-4 py-3 rounded-lg transition-colors'
+                        >
+                            {link}
+                        </Link>
+                    )}
+                    {user && (
+                        <div className='mt-4 pt-4 border-t border-gray-200'>
+                            <div className='flex items-center gap-3 px-4 py-3 bg-gray-50 rounded-lg'>
+                                <div className='w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white font-bold'>
+                                    {user.email[0].toUpperCase()}
+                                </div>
+                                <span className='text-sm font-medium text-gray-700'>
+                                    {user.email}
+                                </span>
+                            </div>
+                        </div>
+                    )}
+                </div>
             </div>
         </nav>
     </header>
