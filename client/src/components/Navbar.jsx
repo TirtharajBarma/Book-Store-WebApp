@@ -5,14 +5,30 @@ import { Link } from 'react-router-dom';
 //FaBlog is the name of the icon
 import { FaBarsStaggered, FaBlog, FaXmark } from "react-icons/fa6";
 import { AuthContext } from '../context/AuthProvider';
+import toast from 'react-hot-toast';
 
 const Navbar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isSticky, setIsSticky] = useState(false);    {/* by default false */}
 
     // to fetch the user from firebase
-    const {user} = useContext(AuthContext);
-    // console.log(user)
+    const {user, logout} = useContext(AuthContext);
+    
+    // Handle logout
+    const handleLogout = () => {
+        logout().then(() => {
+            toast.success('Logged out successfully! 👋', {
+                duration: 3000,
+                position: 'top-center',
+            });
+            setTimeout(() => {
+                window.location.href = '/';
+            }, 500);
+        }).catch((error) => {
+            console.error('Logout error:', error);
+            toast.error('Logout failed. Please try again.');
+        });
+    }
 
     //toggle menu
     const toggleMenu = () => {
@@ -39,7 +55,7 @@ const Navbar = () => {
     const navItems = [
         {link : "Home", path: "/"},
         {link : "Shop", path: "/shop"},
-        {link : "Sell Your Book", path: "/admin/dashboard/upload"},
+        {link : "Sell Your Book", path: "/admin/dashboard"},
     ]
 
   return (
@@ -68,17 +84,40 @@ const Navbar = () => {
                     }
                 </ul>
 
-                {/* user info & search for lg devices */}
+                {/* user info & logout for lg devices */}
                 <div className='hidden lg:flex items-center gap-4'>
-                    {user && (
-                        <div className='flex items-center gap-2 px-4 py-2 bg-gray-100 rounded-full'>
-                            <div className='w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white font-bold'>
-                                {user.email[0].toUpperCase()}
+                    {user ? (
+                        <>
+                            <div className='flex items-center gap-2 px-4 py-2 bg-gray-100 rounded-full'>
+                                {user.photoURL ? (
+                                    <img 
+                                        src={user.photoURL} 
+                                        alt="User" 
+                                        className='w-8 h-8 rounded-full'
+                                    />
+                                ) : (
+                                    <div className='w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white font-bold'>
+                                        {(user.displayName || user.email)[0].toUpperCase()}
+                                    </div>
+                                )}
+                                <span className='text-sm font-medium text-gray-700 max-w-[150px] truncate'>
+                                    {user.displayName || user.email.split('@')[0]}
+                                </span>
                             </div>
-                            <span className='text-sm font-medium text-gray-700 max-w-[150px] truncate'>
-                                {user.email.split('@')[0]}
-                            </span>
-                        </div>
+                            <button
+                                onClick={handleLogout}
+                                className='px-6 py-2 bg-red-500 hover:bg-red-600 text-white font-medium rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg'
+                            >
+                                Logout
+                            </button>
+                        </>
+                    ) : (
+                        <Link 
+                            to="/login"
+                            className='px-6 py-2 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg'
+                        >
+                            Login
+                        </Link>
                     )}
                 </div>
 
@@ -111,15 +150,48 @@ const Navbar = () => {
                         </Link>
                     )}
                     {user && (
-                        <div className='mt-4 pt-4 border-t border-gray-200'>
+                        <div className='mt-4 pt-4 border-t border-gray-200 space-y-3'>
                             <div className='flex items-center gap-3 px-4 py-3 bg-gray-50 rounded-lg'>
-                                <div className='w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white font-bold'>
-                                    {user.email[0].toUpperCase()}
+                                {user.photoURL ? (
+                                    <img 
+                                        src={user.photoURL} 
+                                        alt="User" 
+                                        className='w-10 h-10 rounded-full'
+                                    />
+                                ) : (
+                                    <div className='w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white font-bold'>
+                                        {(user.displayName || user.email)[0].toUpperCase()}
+                                    </div>
+                                )}
+                                <div className='flex flex-col'>
+                                    <span className='text-sm font-medium text-gray-900'>
+                                        {user.displayName || user.email.split('@')[0]}
+                                    </span>
+                                    <span className='text-xs text-gray-500'>
+                                        {user.email}
+                                    </span>
                                 </div>
-                                <span className='text-sm font-medium text-gray-700'>
-                                    {user.email}
-                                </span>
                             </div>
+                            <button
+                                onClick={() => {
+                                    handleLogout();
+                                    setIsMenuOpen(false);
+                                }}
+                                className='w-full px-4 py-2 bg-red-500 hover:bg-red-600 text-white font-medium rounded-lg transition-colors'
+                            >
+                                Logout
+                            </button>
+                        </div>
+                    )}
+                    {!user && (
+                        <div className='mt-4 pt-4 border-t border-gray-200'>
+                            <Link 
+                                to="/login"
+                                onClick={() => setIsMenuOpen(false)}
+                                className='block w-full px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg transition-colors text-center'
+                            >
+                                Login
+                            </Link>
                         </div>
                     )}
                 </div>

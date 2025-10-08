@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Table } from "flowbite-react";
 import { Link } from 'react-router-dom';
 import KBackend from '../utils/constants';
+import toast from 'react-hot-toast';
 
 const ManageBooks = () => {
   const [allBooks, setAllBooks] = useState([]);
@@ -11,20 +12,30 @@ const ManageBooks = () => {
 
   // delete a book
   const handleDelete = (id) => {
-    console.log (id);
+    const loadingToast = toast.loading('Deleting book...');
+    
     fetch(`${KBackend.url}/book/${id}`, {
       method: "DELETE",
     }).then(res => res.json()).then(data => {
-      alert("Book is deleted successfully!") 
-      // setAllBooks(data);
-      window.location.reload();
-      // for reload
+      toast.success('📚 Book deleted successfully!', { 
+        id: loadingToast,
+        duration: 3000 
+      });
+      // Reload after toast
+      setTimeout(() => {
+        window.location.reload();
+      }, 500);
+    }).catch((error) => {
+      toast.error('Failed to delete book. Please try again.', { 
+        id: loadingToast 
+      });
+      console.error('Delete error:', error);
     })
   }
 
   return (
     <div className='px-4 my-12'>
-      <h2 className='mb-8 text-3xl font-bold'>Manage Books</h2>
+      <h2 className='mb-8 text-3xl font-bold mt-16 lg:mt-0'>Manage Books</h2>
 
       {/* table for book data */}
       <Table className='lg:w-[1180px]'>

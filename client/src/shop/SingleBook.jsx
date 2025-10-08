@@ -1,9 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useLoaderData, useNavigate } from 'react-router-dom';
 import { ChevronDown, Share2, Star, BookOpen, Check } from 'lucide-react';
 import KBackend from '../utils/constants';
+import { AuthContext } from '../context/AuthProvider';
+import toast from 'react-hot-toast';
+import LoginPrompt from '../components/LoginPrompt';
 
 const SingleBook = () => {
+    const { user } = useContext(AuthContext);
     const book = useLoaderData();
     const { _id, bookTitle, authorName, bookDescription, price, imageUrl, category, bookPdfUrl } = book;
     const navigate = useNavigate();
@@ -14,6 +18,8 @@ const SingleBook = () => {
     const [totalRatings, setTotalRatings] = useState(book.totalRatings || 0);
     const [showShareMenu, setShowShareMenu] = useState(false);
     const [shareSuccess, setShareSuccess] = useState(false);
+    const [showLoginPrompt, setShowLoginPrompt] = useState(false);
+    const [loginPromptMessage, setLoginPromptMessage] = useState('');
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -21,7 +27,16 @@ const SingleBook = () => {
 
     // Handle rating
     const handleRating = async (rating) => {
+        if (!user) {
+            setLoginPromptMessage('Please sign in to rate this book and share your thoughts with other readers! 📚');
+            setShowLoginPrompt(true);
+            return;
+        }
+
         setUserRating(rating);
+        
+        // Show loading toast
+        const loadingToast = toast.loading('Submitting your rating...');
         
         try {
             const response = await fetch(`${KBackend.url}/book/${_id}/rate`, {
@@ -29,16 +44,29 @@ const SingleBook = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ rating }),
+                body: JSON.stringify({ 
+                    rating,
+                    userId: user.uid
+                }),
             });
 
             if (response.ok) {
                 const data = await response.json();
                 setAverageRating(data.averageRating);
                 setTotalRatings(data.totalRatings);
+                toast.success(`Thanks for rating ${rating} stars! ⭐`, {
+                    id: loadingToast,
+                });
+            } else {
+                toast.error('Failed to submit rating. Please try again.', {
+                    id: loadingToast,
+                });
             }
         } catch (error) {
             console.error('Error rating book:', error);
+            toast.error('Network error. Please check your connection.', {
+                id: loadingToast,
+            });
         }
     };
 
@@ -104,11 +132,18 @@ const SingleBook = () => {
                     {bookPdfUrl && (
                         <div className="mt-4">
                             <button 
-                                onClick={() => navigate(`/book/${_id}/read`)}
+                                onClick={() => {
+                                    if (!user) {
+                                        setLoginPromptMessage('Please sign in to read this book and enjoy unlimited access! 📖');
+                                        setShowLoginPrompt(true);
+                                        return;
+                                    }
+                                    navigate(`/book/${_id}/read`);
+                                }}
                                 className="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded flex items-center justify-center gap-2 transition-colors font-medium shadow-md"
                             >
                                 <BookOpen size={20} />
-                                <span>Read Now</span>
+                                <span>{user ? 'Read Now' : 'Sign In to Read'}</span>
                             </button>
                         </div>
                     )}
@@ -307,6 +342,14 @@ const SingleBook = () => {
                     </div>
                 </div>
             </div>
+
+            {/* Login Prompt Modal */}
+            <LoginPrompt 
+                isOpen={showLoginPrompt}
+                onClose={() => setShowLoginPrompt(false)}
+                message={loginPromptMessage}
+                returnPath={`/book/${_id}`}
+            />
         </div>
     );
 };

@@ -56,57 +56,68 @@ const Products = () => {
   };
 
   return (
-    <div className="px-4 my-12">
-      <h2 className="text-3xl font-bold mb-8 text-gray-800">Product Inventory</h2>
+    <div className="p-4 lg:p-8 min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+      <div className="mb-8 mt-16 lg:mt-0">
+        <h2 className="text-3xl lg:text-4xl font-bold text-gray-800 mb-2">Product Inventory</h2>
+        <p className="text-gray-500">Manage your book collection</p>
+      </div>
 
-      {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <div className="bg-white rounded-xl shadow-md p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-gray-500 text-sm font-medium">Total Products</p>
-              <h3 className="text-3xl font-bold mt-2">{stats.totalProducts}</h3>
+      {/* Modern Stats Grid */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-6 mb-8">
+        <div className="group bg-white rounded-2xl shadow-lg p-4 lg:p-6 hover:shadow-2xl transition-all duration-300 hover:scale-105 border border-gray-100">
+          <div className="flex items-start justify-between mb-3 lg:mb-4">
+            <div className="p-2 lg:p-3 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 shadow-lg group-hover:scale-110 transition-transform duration-300">
+              <Package size={20} className="text-white lg:w-6 lg:h-6" />
             </div>
-            <div className="p-4 rounded-full bg-blue-500">
-              <Package size={28} className="text-white" />
-            </div>
+          </div>
+          <div>
+            <p className="text-gray-500 text-xs lg:text-sm font-medium uppercase tracking-wider">Total Products</p>
+            <h3 className="text-2xl lg:text-4xl font-bold mt-1 lg:mt-2 bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">
+              {stats.totalProducts}
+            </h3>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl shadow-md p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-gray-500 text-sm font-medium">Total Value</p>
-              <h3 className="text-2xl font-bold mt-2">₹{stats.totalValue.toLocaleString()}</h3>
+        <div className="group bg-white rounded-2xl shadow-lg p-4 lg:p-6 hover:shadow-2xl transition-all duration-300 hover:scale-105 border border-gray-100">
+          <div className="flex items-start justify-between mb-3 lg:mb-4">
+            <div className="p-2 lg:p-3 rounded-xl bg-gradient-to-br from-green-500 to-green-600 shadow-lg group-hover:scale-110 transition-transform duration-300">
+              <DollarSign size={20} className="text-white lg:w-6 lg:h-6" />
             </div>
-            <div className="p-4 rounded-full bg-green-500">
-              <DollarSign size={28} className="text-white" />
-            </div>
+          </div>
+          <div>
+            <p className="text-gray-500 text-xs lg:text-sm font-medium uppercase tracking-wider">Total Value</p>
+            <h3 className="text-xl lg:text-3xl font-bold mt-1 lg:mt-2 bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">
+              ₹{stats.totalValue.toLocaleString()}
+            </h3>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl shadow-md p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-gray-500 text-sm font-medium">Avg Price</p>
-              <h3 className="text-2xl font-bold mt-2">₹{stats.avgPrice.toFixed(0)}</h3>
+        <div className="group bg-white rounded-2xl shadow-lg p-4 lg:p-6 hover:shadow-2xl transition-all duration-300 hover:scale-105 border border-gray-100">
+          <div className="flex items-start justify-between mb-3 lg:mb-4">
+            <div className="p-2 lg:p-3 rounded-xl bg-gradient-to-br from-purple-500 to-purple-600 shadow-lg group-hover:scale-110 transition-transform duration-300">
+              <TrendingUp size={20} className="text-white lg:w-6 lg:h-6" />
             </div>
-            <div className="p-4 rounded-full bg-purple-500">
-              <TrendingUp size={28} className="text-white" />
-            </div>
+          </div>
+          <div>
+            <p className="text-gray-500 text-xs lg:text-sm font-medium uppercase tracking-wider">Avg Price</p>
+            <h3 className="text-xl lg:text-3xl font-bold mt-1 lg:mt-2 bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">
+              ₹{stats.avgPrice.toFixed(0)}
+            </h3>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl shadow-md p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-gray-500 text-sm font-medium">Top Rated</p>
-              <h3 className="text-3xl font-bold mt-2">{stats.topRated}</h3>
-              <p className="text-gray-400 text-xs mt-1">4+ stars</p>
+        <div className="group bg-white rounded-2xl shadow-lg p-4 lg:p-6 hover:shadow-2xl transition-all duration-300 hover:scale-105 border border-gray-100">
+          <div className="flex items-start justify-between mb-3 lg:mb-4">
+            <div className="p-2 lg:p-3 rounded-xl bg-gradient-to-br from-yellow-500 to-yellow-600 shadow-lg group-hover:scale-110 transition-transform duration-300">
+              <ShoppingBag size={20} className="text-white lg:w-6 lg:h-6" />
             </div>
-            <div className="p-4 rounded-full bg-yellow-500">
-              <ShoppingBag size={28} className="text-white" />
-            </div>
+          </div>
+          <div>
+            <p className="text-gray-500 text-xs lg:text-sm font-medium uppercase tracking-wider">Top Rated</p>
+            <h3 className="text-2xl lg:text-4xl font-bold mt-1 lg:mt-2 bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">
+              {stats.topRated}
+            </h3>
+            <p className="text-gray-400 text-[10px] lg:text-xs mt-1 lg:mt-2">4+ stars</p>
           </div>
         </div>
       </div>

@@ -1,11 +1,12 @@
-import React, { useState } from 'react'
-import { Button, Checkbox, Label, Select, TextInput , Textarea, Alert} from "flowbite-react"
+import React, { useState, useEffect } from 'react'
+import { Button, Checkbox, Label, Select, TextInput , Textarea } from "flowbite-react"
 import { Upload, FileText, Image as ImageIcon, Link2, BookOpen, CheckCircle } from 'lucide-react'
 import KBackend from '../utils/constants';
 import { convertToDirectPdfUrl, extractGoogleDriveFileId } from '../utils/pdfUtils';
 import PdfUrlHelper from '../components/PdfUrlHelper';
+import toast from 'react-hot-toast';
 
-const UploadBook = () => {
+const UploadBook = ({ editMode = false, bookData = null, bookId = null }) => {
 
   const bookCategories = [
     "Fiction",
@@ -20,16 +21,16 @@ const UploadBook = () => {
     "Romantasy"
   ]
 
-  const [selectedBookCategory, setSelectedBookCategory] = useState(bookCategories[0]);
+  const [selectedBookCategory, setSelectedBookCategory] = useState(
+    editMode && bookData?.category ? bookData.category : bookCategories[0]
+  );
   const [uploadMethod, setUploadMethod] = useState('url'); // 'url' or 'file'
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
-  const [alertInfo, setAlertInfo] = useState(null);
   const [pdfUrl, setPdfUrl] = useState('');
   const [convertedUrl, setConvertedUrl] = useState('');
 
   const handleChangeSelectedValue = (event) => {
-    console.log(event.target.value);
     setSelectedBookCategory(event.target.value);
   }
 
@@ -46,12 +47,19 @@ const UploadBook = () => {
     }
   }
 
+  // Initialize form with edit data
+  useEffect(() => {
+    if (editMode && bookData) {
+      setPdfUrl(bookData.bookPdfUrl || '');
+      setConvertedUrl(bookData.bookPdfUrl || '');
+    }
+  }, [editMode, bookData]);
+
   //handel book submission
   //collecting data on form submit
   const handelBookSubmit = async (event) => {
     event.preventDefault();
     setIsUploading(true);
-    setAlertInfo(null);
     
     const form = event.target;
 
@@ -67,12 +75,18 @@ const UploadBook = () => {
       bookTitle, authorName, imageUrl, category, bookDescription, bookPdfUrl, price
     }
 
-    console.log(bookObj);
+    const loadingToast = toast.loading(editMode ? 'Updating book...' : 'Uploading book...');
 
     try {
       //send data to DataBase
-      const response = await fetch(`${KBackend.url}/upload-book`, {
-        method: "POST",
+      const url = editMode 
+        ? `${KBackend.url}/book/${bookId}`
+        : `${KBackend.url}/upload-book`;
+      
+      const method = editMode ? "PATCH" : "POST";
+      
+      const response = await fetch(url, {
+        method: method,
         headers: {
           "Content-type" : "application/json",
         },
@@ -82,38 +96,43 @@ const UploadBook = () => {
       const data = await response.json();
       
       if (response.ok) {
-        setAlertInfo({ type: 'success', message: '✅ Book uploaded successfully!' });
-        form.reset();
-        setPdfUrl('');
-        setConvertedUrl('');
-        setTimeout(() => setAlertInfo(null), 5000);
+        const message = editMode 
+          ? '✅ Book updated successfully!' 
+          : '📚 Book uploaded successfully!';
+        toast.success(message, { id: loadingToast, duration: 3000 });
+        
+        if (!editMode) {
+          form.reset();
+          setPdfUrl('');
+          setConvertedUrl('');
+        }
       } else {
-        setAlertInfo({ type: 'failure', message: '❌ Failed to upload book. Please try again.' });
+        const message = editMode 
+          ? 'Failed to update book. Please try again.' 
+          : 'Failed to upload book. Please try again.';
+        toast.error(message, { id: loadingToast });
       }
     } catch (error) {
       console.error('Upload error:', error);
-      setAlertInfo({ type: 'failure', message: '❌ Network error. Please check your connection.' });
+      toast.error('Network error. Please check your connection.', { id: loadingToast });
     } finally {
       setIsUploading(false);
     }
   }
 
   return (
-    <div className='px-4 my-12'>
-      <div className="mb-8">
-        <h2 className='text-3xl font-bold flex items-center gap-3'>
+        <div className='px-4 my-12'>
+      <div className="max-w-4xl mx-auto">
+        <h2 className='mb-8 text-3xl font-bold mt-16 lg:mt-0'>
           <BookOpen className="text-blue-600" size={32} />
-          Upload a Book
+          {editMode ? 'Update Book' : 'Upload a Book'}
         </h2>
-        <p className="text-gray-600 mt-2">Add a new book to your collection with all the details</p>
+        <p className="text-gray-600 mt-2">
+          {editMode 
+            ? 'Update the book details below' 
+            : 'Add a new book to your collection with all the details'}
+        </p>
       </div>
-
-      {/* Alert Messages */}
-      {alertInfo && (
-        <Alert color={alertInfo.type} className="mb-6" onDismiss={() => setAlertInfo(null)}>
-          <span className="font-medium">{alertInfo.message}</span>
-        </Alert>
-      )}
 
       {/* redirecting to the function created */}
       <form onSubmit={handelBookSubmit} className="flex lg:w-[1180px] flex-col flex-wrap gap-6">
@@ -137,6 +156,7 @@ const UploadBook = () => {
               name="bookTitle" 
               type="text" 
               placeholder="e.g., The Great Gatsby" 
+              defaultValue={editMode ? bookData?.bookTitle : ''}
               required 
               icon={FileText}
             />
@@ -152,6 +172,7 @@ const UploadBook = () => {
               name="authorName" 
               type="text" 
               placeholder="e.g., F. Scott Fitzgerald" 
+              defaultValue={editMode ? bookData?.authorName : ''}
               required 
             />
           </div>
@@ -178,6 +199,7 @@ const UploadBook = () => {
               name="imageUrl" 
               type="url" 
               placeholder="https://example.com/book-cover.jpg" 
+              defaultValue={editMode ? bookData?.imageUrl : ''}
               required 
               icon={ImageIcon}
             />
@@ -211,6 +233,7 @@ const UploadBook = () => {
               name="price" 
               type="number" 
               placeholder="299" 
+              defaultValue={editMode ? bookData?.price : ''}
               required 
               min="0"
             />
@@ -261,6 +284,7 @@ const UploadBook = () => {
           id="bookDescription" 
           name="bookDescription" 
           placeholder="Enter a detailed description of the book, including plot summary, themes, and what makes it special..." 
+          defaultValue={editMode ? bookData?.bookDescription : ''}
           required 
           rows={6} 
           className='w-full'

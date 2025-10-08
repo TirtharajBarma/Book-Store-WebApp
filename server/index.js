@@ -20,7 +20,7 @@ const uri = process.env.MONGODB_URI;
 const client = new MongoClient(uri, {
   serverApi: {
     version: ServerApiVersion.v1,
-    strict: true,
+    strict: false,  // Changed to false to support distinct command
     deprecationErrors: true,
   }
 });
@@ -34,6 +34,8 @@ async function run() {
     //create a collection of documents
     //database name => bookCollections
     const bookCollections = client.db("BookInventory").collection("books");
+    const userCollections = client.db("BookInventory").collection("users");
+    const analyticsCollections = client.db("BookInventory").collection("analytics");
     
     //insert a book to the db using post method
     // to upload anything we use post method
@@ -103,6 +105,18 @@ async function run() {
         const id = req.params.id;
         const filter = { _id: new ObjectId(id)};
         const result = await bookCollections.findOne(filter);
+        
+        // Track view count
+        if (result) {
+            await bookCollections.updateOne(
+                filter,
+                { 
+                    $inc: { views: 1 },
+                    $set: { lastViewed: new Date() }
+                }
+            );
+        }
+        
         res.send(result);
     });
 
@@ -110,7 +124,7 @@ async function run() {
     app.post("/book/:id/rate", async(req, res) => {
         try {
             const id = req.params.id;
-            const { rating } = req.body;
+            const { rating, userId } = req.body;
             
             if (!rating || rating < 1 || rating > 5) {
                 return res.status(400).send({ error: 'Rating must be between 1 and 5' });
@@ -139,6 +153,17 @@ async function run() {
 
             await bookCollections.updateOne(filter, updatedDoc);
             
+            // Track user rating activity
+            if (userId) {
+                await analyticsCollections.insertOne({
+                    type: 'rating',
+                    bookId: id,
+                    userId: userId,
+                    rating: rating,
+                    timestamp: new Date()
+                });
+            }
+            
             res.send({
                 success: true,
                 averageRating: newAverage,
@@ -147,6 +172,184 @@ async function run() {
         } catch (error) {
             console.error('Rating error:', error);
             res.status(500).send({ error: 'Failed to rate book' });
+        }
+    });
+
+    // Get most popular books (by views and ratings)
+    app.get("/popular-books", async(req, res) => {
+        try {
+            const limit = parseInt(req.query.limit) || 10;
+            
+            // Get books sorted by views and ratings
+            const popularBooks = await bookCollections
+                .find()
+                .sort({ views: -1, totalRatings: -1, rating: -1 })
+                .limit(limit)
+                .toArray();
+            
+            res.send(popularBooks);
+        } catch (error) {
+            console.error('Error fetching popular books:', error);
+            res.status(500).send({ error: 'Failed to fetch popular books' });
+        }
+    });
+
+    // Save or update user info when they login
+    app.post("/user/login", async(req, res) => {
+        try {
+            const { uid, email, displayName, photoURL, adminKey } = req.body;
+            
+            if (!uid) {
+                return res.status(400).send({ error: 'User ID is required' });
+            }
+
+            const filter = { uid: uid };
+            
+            // Check if user already exists to preserve role
+            const existingUser = await userCollections.findOne(filter);
+            
+            // Determine role based on admin key
+            let userRole = 'user';
+            if (adminKey && adminKey === process.env.ADMIN_SECRET_KEY) {
+                userRole = 'admin';
+            } else if (existingUser && existingUser.role) {
+                // Preserve existing role if no admin key provided
+                userRole = existingUser.role;
+            }
+            
+            const updateDoc = {
+                $set: {
+                    email: email,
+                    displayName: displayName || email.split('@')[0],
+                    photoURL: photoURL,
+                    lastLogin: new Date(),
+                    role: userRole
+                },
+                $setOnInsert: {
+                    createdAt: new Date()
+                }
+            };
+
+            const result = await userCollections.updateOne(
+                filter,
+                updateDoc,
+                { upsert: true }
+            );
+            
+            // Get updated user with role
+            const user = await userCollections.findOne(filter);
+            
+            res.send({ success: true, user, result });
+        } catch (error) {
+            console.error('User login error:', error);
+            res.status(500).send({ error: 'Failed to save user data' });
+        }
+    });
+
+    // Update user role (admin only)
+    app.patch("/user/:uid/role", async(req, res) => {
+        try {
+            const { uid } = req.params;
+            const { role, adminUid } = req.body;
+            
+            if (!['user', 'admin'].includes(role)) {
+                return res.status(400).send({ error: 'Invalid role' });
+            }
+
+            // Verify admin making request
+            const admin = await userCollections.findOne({ uid: adminUid });
+            if (!admin || admin.role !== 'admin') {
+                return res.status(403).send({ error: 'Unauthorized: Admin access required' });
+            }
+
+            const result = await userCollections.updateOne(
+                { uid: uid },
+                { $set: { role: role, updatedAt: new Date() } }
+            );
+            
+            res.send({ success: true, result });
+        } catch (error) {
+            console.error('Error updating user role:', error);
+            res.status(500).send({ error: 'Failed to update user role' });
+        }
+    });
+
+    // Get all users
+    app.get("/users", async(req, res) => {
+        try {
+            const users = await userCollections
+                .find()
+                .sort({ lastLogin: -1 })
+                .toArray();
+            
+            res.send(users);
+        } catch (error) {
+            console.error('Error fetching users:', error);
+            res.status(500).send({ error: 'Failed to fetch users' });
+        }
+    });
+
+    // Get dashboard analytics
+    app.get("/analytics/dashboard", async(req, res) => {
+        try {
+            // Get all books for calculations
+            const allBooks = await bookCollections.find().toArray();
+            
+            // Total books
+            const totalBooks = allBooks.length;
+            
+            // Total users
+            const totalUsers = await userCollections.countDocuments();
+            
+            // Books with ratings
+            const booksWithRatings = allBooks.filter(book => book.totalRatings > 0);
+            
+            const totalRatings = booksWithRatings.reduce((sum, book) => 
+                sum + (book.totalRatings || 0), 0
+            );
+            
+            const avgRating = booksWithRatings.length > 0
+                ? booksWithRatings.reduce((sum, book) => 
+                    sum + (book.rating || 0), 0) / booksWithRatings.length
+                : 0;
+            
+            // Categories count
+            const categories = await bookCollections.distinct("category");
+            
+            // Total views
+            const totalViews = allBooks.reduce((sum, book) => 
+                sum + (book.views || 0), 0
+            );
+            
+            // Price calculations
+            const totalValue = allBooks.reduce((sum, book) => 
+                sum + parseFloat(book.price || 0), 0
+            );
+            
+            const avgPrice = totalBooks > 0 ? totalValue / totalBooks : 0;
+            
+            // Recent activity (last 7 days)
+            const sevenDaysAgo = new Date();
+            sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+            
+            const recentUsers = await userCollections.countDocuments({
+                lastLogin: { $gte: sevenDaysAgo }
+            });
+            
+            res.send({
+                totalBooks,
+                totalUsers,
+                totalRatings,
+                avgRating: avgRating.toFixed(2),
+                categories: categories.length,
+                totalViews,
+                activeUsers: recentUsers,
+                totalValue: Math.round(totalValue),
+                avgPrice: Math.round(avgPrice)
+            });
+        } catch (error) {
+            console.error('Error fetching analytics:', error);
+            res.status(500).send({ error: 'Failed to fetch analytics' });
         }
     });
 

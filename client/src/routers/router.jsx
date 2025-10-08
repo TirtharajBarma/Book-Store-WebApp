@@ -19,6 +19,7 @@ import Products from "../dashboard/Products";
 import SignUp from "../components/SignUp";
 import Login from "../components/Login";
 import PrivateRoute from "../PrivateRoute/PrivateRoute";
+import AdminRoute from "../PrivateRoute/AdminRoute";
 import KBackend from "../utils/constants";
 
   const router = createBrowserRouter([
@@ -50,42 +51,42 @@ import KBackend from "../utils/constants";
       ]
     },
 
-    // Book Reader - Separate route (no navbar/footer)
+    // Book Reader - Separate route (no navbar/footer) - Requires login
     {
       path: '/book/:id/read',
-      element: <BookReader/>,
+      element: <PrivateRoute><BookReader/></PrivateRoute>,
       loader: ({params}) => fetch(`${KBackend.url}/book/${params.id}`)
     },
 
-    // private routing
+    // Admin only routing
     {
       path: "/admin/dashboard",
-      element: <DashboardLayout/>,
+      element: <AdminRoute><DashboardLayout/></AdminRoute>,
       children: [
         {
           path: "/admin/dashboard",
-          element: <PrivateRoute><Dashboard/></PrivateRoute>
+          element: <Dashboard/>
         },
         {
           path: "/admin/dashboard/upload",
-          element: <PrivateRoute><UploadBook/></PrivateRoute>
+          element: <UploadBook/>
         },
         {
           path: "/admin/dashboard/manage",
-          element: <PrivateRoute><ManageBooks/></PrivateRoute>
+          element: <ManageBooks/>
         },
         {
           path: "/admin/dashboard/edit-books/:id",
-          element: <PrivateRoute><EditBooks/></PrivateRoute>,
+          element: <EditBooks/>,
           loader: ({params}) => fetch(`${KBackend.url}/book/${params.id}`)
         },
         {
           path: "/admin/dashboard/users",
-          element: <PrivateRoute><Users/></PrivateRoute>
+          element: <Users/>
         },
         {
           path: "/admin/dashboard/products",
-          element: <PrivateRoute><Products/></PrivateRoute>
+          element: <Products/>
         }
       ]
     },
