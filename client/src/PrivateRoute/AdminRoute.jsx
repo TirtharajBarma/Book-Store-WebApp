@@ -8,6 +8,13 @@ const AdminRoute = ({children}) => {
     const {user, userRole, loading, logout} = useContext(AuthContext);
     const location = useLocation();
 
+    // Debug logs
+    useEffect(() => {
+        console.log('AdminRoute - Loading:', loading);
+        console.log('AdminRoute - User:', user?.email);
+        console.log('AdminRoute - UserRole:', userRole);
+    }, [loading, user, userRole]);
+
     const handleLogout = () => {
         logout().then(() => {
             toast.success('Logged out successfully! 👋', {
@@ -23,9 +30,11 @@ const AdminRoute = ({children}) => {
         });
     };
 
+    // Show loading spinner while checking auth
     if(loading) {
-        return <div className='flex justify-center items-center min-h-screen'>
-            <Spinner aria-label="Center-aligned spinner example" size="xl" />
+        return <div className='flex flex-col justify-center items-center min-h-screen'>
+            <Spinner aria-label="Loading authentication..." size="xl" />
+            <p className='mt-4 text-gray-600'>Verifying admin access...</p>
         </div>
     }
 
@@ -44,8 +53,11 @@ const AdminRoute = ({children}) => {
                     <p className='text-gray-600 mb-4'>
                         You need admin privileges to access this page.
                     </p>
-                    <p className='text-sm text-gray-500 mb-6'>
+                    <p className='text-sm text-gray-500 mb-2'>
                         Logged in as: <span className='font-medium'>{user?.displayName || user?.email}</span>
+                    </p>
+                    <p className='text-xs text-gray-400 mb-6'>
+                        Current role: <span className='font-medium'>{userRole || 'loading...'}</span>
                     </p>
                     <div className='flex flex-col gap-3'>
                         <div className='flex gap-3 justify-center'>

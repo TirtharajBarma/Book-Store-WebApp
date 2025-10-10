@@ -40,6 +40,9 @@ const AuthProvider = ({children}) => {
     }
 
     const logout = () => {
+      // Clear role from sessionStorage
+      sessionStorage.removeItem('userRole');
+      setUserRole(null);
       return signOut(auth)
     }
 
@@ -47,11 +50,13 @@ const AuthProvider = ({children}) => {
     // fetch the current user
     useEffect( () => {
       const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-        // console.log(currentUser);
         setUser(currentUser);
         
-        // Save user to MongoDB when they login
+        // Save user to MongoDB when they login and fetch role
         if (currentUser) {
+          // Keep loading true until role is fetched
+          setLoading(true);
+          
           try {
             // Refresh token to extend session
             await currentUser.getIdToken(true);
@@ -69,16 +74,41 @@ const AuthProvider = ({children}) => {
               })
             });
 
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
             const data = await response.json();
-            if (data.user) {
+            console.log('User data from backend:', data); // Debug log
+            
+            if (data.user && data.user.role) {
               setUserRole(data.user.role);
+              // Store role in sessionStorage for persistence across page refreshes
+              sessionStorage.setItem('userRole', data.user.role);
+            } else {
+              // Default to user role if not found
+              setUserRole('user');
+              sessionStorage.setItem('userRole', 'user');
             }
           } catch (error) {
-            console.error('Error saving user to database:', error);
+            console.error('Error fetching user role:', error);
+            // Try to get role from sessionStorage as fallback
+            const cachedRole = sessionStorage.getItem('userRole');
+            if (cachedRole) {
+              setUserRole(cachedRole);
+            } else {
+              setUserRole('user');
+            }
+          } finally {
+            // Always set loading to false after role fetch attempt
+            setLoading(false);
           }
+        } else {
+          // No user logged in
+          setUserRole(null);
+          sessionStorage.removeItem('userRole');
+          setLoading(false);
         }
-        
-        setLoading(false);
       });
 
       // Auto-logout after 2 hours
