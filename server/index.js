@@ -7,7 +7,12 @@ dotenv.config();
 
 //middleware
 //connection to frontend side
-app.use(cors());
+app.use(cors({
+    origin: ['http://localhost:5173', 'http://localhost:5002', 'https://book-store-web-app-azure.vercel.app'],
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(express.json());
 
 //db connection
@@ -37,6 +42,7 @@ async function run() {
     const userCollections = client.db("BookInventory").collection("users");
     const analyticsCollections = client.db("BookInventory").collection("analytics");
     
+    
     //insert a book to the db using post method
     // to upload anything we use post method
     app.post("/upload-book", async(req, res) => {
@@ -48,13 +54,7 @@ async function run() {
         res.send(result);
     });
     
-    //fetch books from the database
-    //to get data -> find the data
-    app.get("/all-books", async(req, res) => {
-        const books = await bookCollections.find();
-        const result = await books.toArray();
-        res.send(result);
-    });
+    //fetch books from the database - REMOVED (duplicate route, see line ~70 for the one with filtering)
     
     //50.00
     //update a book data
@@ -370,6 +370,12 @@ app.get('/', (req, res) => {
     res.send('Welcome to the book-store');
 });
 
-app.listen(port, () => {
-    console.log(`Example app is listening on port ${port}`);
-});
+// Only start server if not in Vercel environment
+if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+    app.listen(port, () => {
+        console.log(`Example app is listening on port ${port}`);
+    });
+}
+
+// Export for Vercel serverless
+module.exports = app;
