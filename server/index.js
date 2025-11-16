@@ -8,7 +8,7 @@ dotenv.config();
 //middleware
 //connection to frontend side
 app.use(cors({
-    origin: ['http://localhost:5173', 'http://localhost:5002', 'https://book-store-web-app-azure.vercel.app', 'http://bookstore.tirtharajbarma.tech'],
+    origin: ['http://localhost:5173', 'http://localhost:5002', 'https://book-store-web-app-azure.vercel.app', 'https://bookstore.tirtharajbarma.tech' ,'http://bookstore.tirtharajbarma.tech'],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']
